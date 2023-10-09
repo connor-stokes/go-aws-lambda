@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Resources:
+  GoLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: example
+      Runtime: go1.x
+      CodeUri: ./example
+      MemorySize: 128
+      Timeout: 5
+      Events:
+        ApiGatewayEvent:
+          Type: Api
+          Properties:
+            Path: /name
+            Method: GET
+
+Outputs:
+  GoLambdaFunctionArn:
+    Description: "ARN of the Go Lambda Function"
+    Value: !GetAtt GoLambdaFunction.Arn
+  GoLambdaFunctionInvokeURL:
+    Description: "URL to invoke the Go Lambda Function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/name"
